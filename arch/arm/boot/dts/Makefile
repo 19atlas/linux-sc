@@ -29,6 +29,7 @@ subdir-y += realtek
 subdir-y += renesas
 subdir-y += rockchip
 subdir-y += samsung
+subdir-y += sc
 subdir-y += sigmastar
 subdir-y += socionext
 subdir-y += st
