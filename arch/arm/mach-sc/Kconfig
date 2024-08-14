@@ -1,10 +1,16 @@
 menu "Spreadtrum SoC Type"
 
+config ARCH_SC
+	bool "enable old Spreadtrum mach"
+	help
+	  support old spreadtrum mach
+
 config  ARCH_SCX35
 	bool "sc8830 series(shark)"
 	select CPU_V7
 	select HAVE_SMP
 	select ARM_GIC
+	select ARCH_SC
 	select HAVE_SCHED_CLOCK
 	select LOCAL_TIMERS if SMP
 	select VFP
