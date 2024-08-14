@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-2.0-only
 obj-$(CONFIG_MACH_SPX35LFPGA) += board-sp8830fpga.o
 obj-$(CONFIG_MACH_PIKELFPGA) += board-sp8830fpga.o
 obj-$(CONFIG_MACH_SP7731GEA) += board-sp7731gea.o
