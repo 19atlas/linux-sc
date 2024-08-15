@@ -22,7 +22,6 @@ PARAMS_PHYS := $(call add_hex, $(PHYS_OFFSET), 0x100)
 initrd_offset-$(CONFIG_ARCH_FOOTBRIDGE)	+= 0x00800000
 initrd_offset-$(CONFIG_ARCH_SA1100)	+= 0x00800000
 initrd_offset-$(CONFIG_ARCH_RPC)	+= 0x08000000
-initrd_offset-$(CONFIG_ARCH_SC)	+= 0x80800000
 INITRD_OFFSET := $(initrd_offset-y)
 ifdef INITRD_OFFSET
 INITRD_PHYS := $(call add_hex, $(PHYS_OFFSET), $(INITRD_OFFSET))

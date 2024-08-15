@@ -50,13 +50,6 @@
 	};
 
 
-	sprd_simdet {
-		compatible = "sprd,sim_detect";
-		sprd,name = "simdet";
-		gpios = <&d_gpio_gpio 162 0>;
-		irq_trigger_level_detect = <1>;
-		delay_time = <100>;
-	};
 
 	sec-debug {
 		crash_key {
