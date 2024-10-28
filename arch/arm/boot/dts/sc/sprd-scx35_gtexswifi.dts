@@ -1,0 +1,156 @@
+/*
+ * Copyright (C) 2013 Spreadtrum Communication Incorporated
+ *		http://www.spreadtrum.com/
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+/dts-v1/;
+
+/*
+
+memory reserved for SMEM
+/memreserve/ 0x87800000 0x400000;  4M
+
+ memory reserved for CPW modem
+/memreserve/ 0x88000000 0x1d00000;  28M
+
+ memory reserved for fb
+/memreserve/ 0x9EA48000 0xBB8000;  800*1280*4*3, 4K alignment
+
+ memory reserved for ION
+/memreserve/ 0x9F600000 0x800000;  800*1280*4*2, 8K alignment
+
+*/
+
+/include/ "sprd-scx35_3.dtsi"
+/include/ "sprd-scx35_sc7730.dtsi"
+/include/ "sprd-scx35_gtexswifi_battery_r00.dtsi"
+#include <dt-bindings/video/gen-panel.h>
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+	model = "Spreadtrum SP7730G board";
+		sprd,sc-id = <8830 5 0x20000>;
+	chosen {
+		bootargs = "loglevel=7 init=/init root=/dev/ram0 rw";
+		linux,initrd-start = <0x85500000>;
+		linux,initrd-end   = <0x855a3212>;
+	};
+
+
+	memory {
+		device_type = "memory";
+		reg = <0x80000000 0x60000000>;
+	};
+
+
+	sec-debug {
+		crash_key {
+			keys = "vol-down", "power", "power";
+			size-keys = <3>;
+			timeout = <1000>; /* default = 1000msec */
+		};
+	};
+	
+
+	panel {
+		compatible = "sprd,sprdfb-dsi-panel";
+		pinctrl-names = "default";
+		gen-panel = <&gen_panel>;
+		gen-panel-backlight = <&backlight>;
+		panel-ext-pin {
+			/* power on */
+			panel-ext-pin-on-0 = <
+				&panel_vci	1	0
+				&panel_vdd3	1	0
+			>;
+			/* reset: low 5ms high 20ms, sleep and set */
+			panel-ext-pin-on = <
+				&panel_rst	0	5000
+				&panel_rst	1	20000
+			>;
+			panel-ext-pin-off = <
+				&panel_rst	0	10
+				&panel_vci	0	10
+				&panel_vdd3	0	10
+			>;
+			/* VDD_LCD_3P3 */
+			panel_vci: panel-ext-pin-0 {
+				pin-name = "panel_vci";
+				pin-type = <EXT_PIN_REGULATOR>;
+				pin-supply = <&vddsim1>;
+			};
+			/* VDD_LCD_1P8 */
+			panel_vdd3: panel-ext-pin-1 {
+				pin-name = "panel_vdd3";
+				pin-type = <EXT_PIN_REGULATOR>;
+				pin-supply = <&vddsim0>;
+			};
+			panel_rst: panel-ext-pin-2 {
+				pin-name = "panel_rst";
+				pin-type = <EXT_PIN_GPIO>; 
+				pin-gpio = <&d_gpio_gpio 103 GPIO_ACTIVE_HIGH>;
+			};
+		};
+		gen_panel: gen-panel{};
+	};
+
+
+
+&pinctrl {
+	pwr_domain ="vdd18", /* "vdd18" */ /* VIO_2_0_ms */
+			   "vdd18", /* "vdd28" */ /* VIO_2_1_ms */
+			   "vddsim0",
+			   "vddsim1",
+			   "vdd18", /* "vddsim2" */
+			   "vddsdcore",
+			   "vdd18";
+};
+
+
+&usb {
+	tune_value = <0x4407ae33>;
+};
+
+&keypad0 {
+	ngpios = <2>;
+	gpios = <&a_eic_gpio 2 0>,<&a_eic_gpio 10 0>;
+	sprd,keypad-num-rows = <2>;
+	sprd,keypad-num-columns = <3>;
+	interrupts = <0 36 0x0>;
+	sprd,keypad-rows-choose-hw = <0x30000>;
+	sprd,keypad-cols-choose-hw = <0x700>;
+	sprd,debounce_time = <5000>;
+	linux,keypad-no-autorepeat;
+
+	key_volume_up {
+		keypad,row = <0>;
+		keypad,column = <0>;
+		linux,code = <115>;
+	};
+
+	key_volume_up1 {
+		keypad,row = <0>;
+		keypad,column = <1>;
+		linux,code = <115>;
+	};
+
+	key_home {
+		keypad,row = <0>;
+		keypad,column = <2>;
+		linux,code = <172>;
+	};
+};
+
+
+
+/* sprd-dsi-panel-dsi_s6d7aa0x11_gtexswifi_video.dtsi */
+
+
+&fb0 {
+	sprd,fb_mem = <0x9EA48000 0xBB8000>;
+	sprd,fb_display_size = <800 1280>;
+	dpi_clk_div = <5>;
+};

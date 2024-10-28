@@ -1,0 +1,34 @@
+# SPDX-License-Identifier: GPL-2.0-only
+menuconfig ARCH_SC
+	bool "Spreadtrum SC8830 (S5L)"
+
+if ARCH_SC
+config  ARCH_SCX35
+	bool "sc8830 series(shark)"
+	select CPU_V7
+	select HAVE_SMP
+	select ARM_GIC
+	select HAVE_SCHED_CLOCK
+	select LOCAL_TIMERS if SMP
+	select VFP
+	select VFPv3
+	select NEON
+	select GENERIC_TIME
+	select CLKSRC_MMIO
+	select ARCH_HAS_CPUFREQ
+	select NEED_MACH_IO_H
+	select ARM_HAS_SG_CHAIN
+	select HAVE_FUTEX_CMPXCHG if MMU && FUTEX
+
+config MACH_GTEXSWIFI
+	bool "scx35_gtexswifi Board"
+	depends on ARCH_SC
+	depends on ARCH_SCX35
+	select MUIC_CABLE_DETECT
+	select FUELGAUGE_SPRD4SAMSUNG27X3
+	select CLKSRC_OF if OF
+	select COMMON_CLK if OF
+	default y
+	help
+	SCX35_GTEXSWIFI board based on SC8830g serial.
+endif
